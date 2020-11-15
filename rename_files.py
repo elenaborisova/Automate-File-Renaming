@@ -23,26 +23,26 @@ def create_new_dir(chosen_dir):
     return new_dir
 
 
-def copy_all_files(chosen_dir, new_dir):
-    all_files = os.listdir(chosen_dir)
-
-    for file in all_files:
-        full_file_name = os.path.join(chosen_dir, file)
-        if os.path.isfile(full_file_name):
-            shutil.copy(full_file_name, new_dir)
+def copy_file_to_new_dir(full_file_name, new_dir):
+    if os.path.isfile(full_file_name):
+        shutil.copy(full_file_name, new_dir)
 
 
-def rename_files_in_dir(new_dir):
-    for file in os.listdir(new_dir):
+def rename_files_in_dir(new_dir, file):
+    if ".docx" in file:
         document = Document(new_dir + "\\" + file)
-        name = document.paragraphs[2].text
-
+        client_name = document.paragraphs[2].text
+    
+        new_file_name = os.path.join(new_dir, f"{client_name}.docx")
         old_file_name = os.path.join(new_dir, file)
-        new_file_name = os.path.join(new_dir, f"{name}.docx")
         os.rename(old_file_name, new_file_name)
 
 
 chosen_dir = choose_directory()
 new_dir = create_new_dir(chosen_dir)
-copy_all_files(chosen_dir, new_dir)
-rename_files_in_dir(new_dir)
+all_files = os.listdir(chosen_dir)
+
+for file in all_files:
+    full_file_name = os.path.join(chosen_dir, file)
+    copy_file_to_new_dir(full_file_name, new_dir)
+    rename_files_in_dir(new_dir, file)
